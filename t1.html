@@ -1,0 +1,98 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <style>
+        /* Your existing styles here */
+    </style>
+    <title>Form</title>
+</head>
+<body>
+    <header>
+        <h1>Project Management System</h1>
+    </header>
+    <section>
+        <form action="indexx.php" method="post" onsubmit="return validateForm()">
+            <label for="pid">PID:</label>
+            <input type="number" id="pid" name="pid" required>
+            <br>
+            <label for="project_name">Project Name (max 15 characters):</label>
+            <input type="text" id="project_name" name="project_name" maxlength="15" required>
+            <br>
+            <label for="project_description">Project Description (max 150 characters):</label>
+            <textarea id="project_description" name="project_description" maxlength="150" required></textarea>
+            <br>
+            <div class="radio-group">
+                <label for="research">Research:</label>
+                <input type="radio" id="research" name="project_type" value="Research" required>
+                <label for="company">Company:</label>
+                <input type="radio" id="company" name="project_type" value="Company" required>
+            </div>
+            <input type="submit" value="Submit">
+        </form>
+
+        <?php
+        if ($_SERVER["REQUEST_METHOD"] == "POST") {
+            // Set error reporting to a more secure configuration
+            error_reporting(E_ALL & ~E_NOTICE);
+            ini_set('display_errors', 0);
+
+            // Connect to the database
+            $servername = "localhost:3306";
+            $username = "root";
+            $password = "root@123";
+            $dbname = "techaroha";
+
+            $conn = new mysqli($servername, $username, $password, $dbname);
+
+            // Check connection
+            if ($conn->connect_error) {
+                die("Connection failed: " . $conn->connect_error);
+            }
+
+            // Get the form data if available
+            $pid = isset($_POST['pid']) ? intval($_POST['pid']) : 0;
+            $project_name = isset($_POST['project_name']) ? $conn->real_escape_string($_POST['project_name']) : "";
+            $project_description = isset($_POST['project_description']) ? $conn->real_escape_string($_POST['project_description']) : "";
+            $project_type = isset($_POST['project_type']) ? $conn->real_escape_string($_POST['project_type']) : "";
+
+            // Convert PID to integer
+            $pid = intval($pid);
+
+            // Insert the data into the database
+            $sql = "INSERT INTO project (PID, PName, Pdescription, Ptype) VALUES ('$pid', '$project_name', '$project_description', '$project_type')";
+
+            // Check if the query was successful
+            if (@$conn->query($sql)) {
+                echo "<p>New record created successfully</p>";
+            } else {
+                echo "<p>Error creating record. Please try again later.</p>";
+                // Log the error for troubleshooting purposes (do not log sensitive data)
+                error_log("SQL Error: " . $conn->error, 0);
+            }
+
+            // Close the database connection
+            $conn->close();
+        }
+        ?>
+    </section>
+
+    <script>
+        function validateForm() {
+            var projectName = document.getElementById('project_name').value;
+            var projectDescription = document.getElementById('project_description').value;
+
+            if (projectName.length > 15) {
+                alert("Project Name should not exceed 15 characters.");
+                return false;
+            }
+
+            if (projectDescription.length > 150) {
+                alert("Project Description should not exceed 150 characters.");
+                return false;
+            }
+
+            return true;
+        }
+    </script>
+</body>
+</html>
