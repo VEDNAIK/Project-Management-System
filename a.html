@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Project Showcase</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+
+        header {
+            background-color: #333;
+            color: #fff;
+            padding: 10px;
+            text-align: center;
+        }
+
+        main {
+            max-width: 800px;
+            margin: 20px auto;
+            padding: 20px;
+            background-color: #fff;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        .project-list {
+            list-style: none;
+            padding: 0;
+        }
+
+        .project-item {
+            background-color: #f9f9f9;
+            margin: 10px 0;
+            padding: 15px;
+            border-radius: 5px;
+            cursor: pointer;
+            transition: background-color 0.3s;
+            position: relative;
+        }
+
+        .project-item:hover {
+            background-color: #e0e0e0;
+        }
+
+        .project-details {
+            display: none;
+            margin-top: 10px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+
+        #newProjectForm,
+        #editProjectForm {
+            display: none;
+            margin-top: 10px;
+            padding: 15px;
+            border: 1px solid #ddd;
+            border-radius: 5px;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <h1>Project Showcase</h1>
+    </header>
+
+    <main>
+        <ul class="project-list">
+            <li class="project-item" onclick="showDetails('project1')">
+                Project 1
+                <button onclick="editProject('project1')">Edit</button>
+            </li>
+            <li class="project-item" onclick="showDetails('project2')">
+                Project 2
+                <button onclick="editProject('project2')">Edit</button>
+            </li>
+            <li class="project-item" onclick="showDetails('project3')">
+                Project 3
+                <button onclick="editProject('project3')">Edit</button>
+            </li>
+        </ul>
+
+        <div id="project1" class="project-details">
+            <h2>Project 1 Details</h2>
+            <p>Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <!-- Add more details as needed -->
+        </div>
+
+        <div id="project2" class="project-details">
+            <h2>Project 2 Details</h2>
+            <p>Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <!-- Add more details as needed -->
+        </div>
+
+        <div id="project3" class="project-details">
+            <h2>Project 3 Details</h2>
+            <p>Description: Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+            <!-- Add more details as needed -->
+        </div>
+
+        <!-- New Project Form -->
+        <div id="newProjectForm">
+            <h2>Create New Project</h2>
+            <form id="projectForm" onsubmit="addProject(event)">
+                <label for="newProjectName">Project Name:</label>
+                <input type="text" id="newProjectName" required>
+                <label for="newProjectDescription">Project Description:</label>
+                <textarea id="newProjectDescription" required></textarea>
+                <button type="submit">Create Project</button>
+            </form>
+        </div>
+
+        <!-- Edit Project Form -->
+        <div id="editProjectForm">
+            <h2>Edit Project</h2>
+            <form id="editForm" onsubmit="updateProject(event)">
+                <label for="editProjectName">Project Name:</label>
+                <input type="text" id="editProjectName" required>
+                <label for="editProjectDescription">Project Description:</label>
+                <textarea id="editProjectDescription" required></textarea>
+                <button type="submit">Update Project</button>
+                <button type="button" onclick="cancelEdit()">Cancel</button>
+            </form>
+        </div>
+
+        <!-- Button to Show New Project Form -->
+        <button onclick="showNewProjectForm()">Create New Project</button>
+    </main>
+
+    <script>
+        function showDetails(projectId) {
+            // Hide all project details
+            const allDetails = document.querySelectorAll('.project-details');
+            allDetails.forEach(detail => detail.style.display = 'none');
+
+            // Show the selected project details
+            const selectedDetail = document.getElementById(projectId);
+            selectedDetail.style.display = 'block';
+        }
+
+        function showNewProjectForm() {
+            // Hide all project details
+            const allDetails = document.querySelectorAll('.project-details');
+            allDetails.forEach(detail => detail.style.display = 'none');
+
+            // Hide existing new project form
+            const existingForm = document.getElementById('newProjectForm');
+            existingForm.style.display = 'none';
+
+            // Show the new project form
+            const newProjectForm = document.getElementById('projectForm');
+            newProjectForm.reset(); // Reset form fields
+            existingForm.style.display = 'block';
+        }
+
+        function addProject(event) {
+            event.preventDefault();
+
+            // Get form values
+            const projectName = document.getElementById('newProjectName').value;
+            const projectDescription = document.getElementById('newProjectDescription').value;
+
+            // Create a new project item
+            const newProjectItem = document.createElement('li');
+            newProjectItem.className = 'project-item';
+            newProjectItem.innerHTML = `
+                ${projectName}
+                <button onclick="editProject('${projectName.replace(/\s+/g, '').toLowerCase()}')">Edit</button>
+            `;
+
+            // Add onclick event to show details
+            newProjectItem.onclick = function() {
+                showDetails(projectName.replace(/\s+/g, '').toLowerCase());
+            };
+
+            // Append the new project item to the project list
+            const projectList = document.querySelector('.project-list');
+            projectList.appendChild(newProjectItem);
+
+            // Create a new project details div
+            const newProjectDetails = document.createElement('div');
+            newProjectDetails.id = projectName.replace(/\s+/g, '').toLowerCase();
+            newProjectDetails.className = 'project-details';
+
+            // Add project details
+            newProjectDetails.innerHTML = `
+                <h2>${projectName} Details</h2>
+                <p>Description: ${projectDescription}</p>
+                <!-- Add more details as needed -->
+            `;
+
+            // Append the new project details to the main content
+            const mainContent = document.querySelector('main');
+            mainContent.appendChild(newProjectDetails);
+
+            // Hide the new project form after submission
+            const newProjectForm = document.getElementById('newProjectForm');
+            newProjectForm.style.display = 'none';
+        }
+
+        function editProject(projectId) {
+            // Populate the edit form with current project details
+            const projectDetails = document.getElementById(projectId);
+            const projectName = projectDetails.querySelector('h2').innerText;
+            const projectDescription = projectDetails.querySelector('p').innerText;
+
+            document.getElementById('editProjectName').value = projectName;
+            document.getElementById('editProjectDescription').value = projectDescription;
+
+            // Show the edit form
+            const editForm = document.getElementById('editProjectForm');
+            editForm.style.display = 'block';
+        }
+
+        function updateProject(event) {
+            event.preventDefault();
+
+            // Get form values
+            const projectName = document.getElementById('editProjectName').value;
+            const projectDescription = document.getElementById('editProjectDescription').value;
+
+            // Update project item
+            const editedProjectItem = document.querySelector('.project-item:contains("' + projectName + '")');
+            editedProjectItem.innerHTML = `
+                ${projectName}
+                <button onclick="editProject('${projectName.replace(/\s+/g, '').toLowerCase()}')">Edit</button>
+            `;
+
+            // Update project details
+            const editedProjectDetails = document.getElementById(projectName.replace(/\s+/g, '').toLowerCase());
+            editedProjectDetails.innerHTML = `
+                <h2>${projectName} Details</h2>
+                <p>Description: ${projectDescription}</p>
+                <!-- Add more details as needed -->
+            `;
+
+            // Hide the edit form after updating
+            const editForm = document.getElementById('editProjectForm');
+            editForm.style.display = 'none';
+        }
+
+
+        function cancelEdit() {
+            // Hide the edit form without saving changes
+            const editForm = document.getElementById('editProjectForm');
+            editForm.style.display = 'none';
+        }
+
+        // Custom contains function for case-insensitive search
+        jQuery.expr[':'].contains = function(a, i, m) {
+            return jQuery(a).text().toUpperCase()
+                .indexOf(m[3].toUpperCase()) >= 0;
+        };
+    </script>
+
+</body>
+</html>

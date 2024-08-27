@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Create a New Project</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      margin: 0;
+      padding: 0;
+      background-color: #f4f4f4;
+    }
+
+    header {
+      background-color: #333;
+      color: #fff;
+      padding: 10px;
+      text-align: center;
+    }
+
+    main {
+      display: flex;
+      justify-content: space-between;
+      padding: 20px;
+    }
+
+    form {
+      width: 60%;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+    }
+
+    form label,
+    form input,
+    form input[type="radio"],
+    form select,
+    form textarea {
+      display: block;
+      margin-bottom: 15px;
+      font-size: 20px;
+    }
+
+    form button {
+      background-color: #333;
+      color: #fff;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+    }
+
+    aside {
+      width: 30%;
+      background-color: #333;
+      color: #fff;
+      padding: 20px;
+      border-radius: 8px;
+      display: none;
+    }
+
+    aside ul {
+      list-style: none;
+      padding: 0;
+      margin: 0;
+    }
+
+    aside li {
+      margin-bottom: 10px;
+    }
+
+    #toggleBtn {
+      background-color: #333;
+      color: #fff;
+      padding: 10px 15px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      display: block;
+      margin-top: 10px;
+    }
+
+    @media (max-width: 768px) {
+      main {
+        flex-direction: column;
+      }
+
+      form,
+      aside {
+        width: 100%;
+        margin-bottom: 20px;
+      }
+    }
+  </style>
+  <script>
+    function toggleDocuments() {
+      var aside = document.getElementById('documentsList');
+      aside.style.display = (aside.style.display === 'none' || aside.style.display === '') ? 'block' : 'none';
+    }
+  </script>
+</head>
+
+<body>
+  <header>
+    <h1>Create a New Project</h1>
+  </header>
+  <main>
+    <form>
+      <label for="projectName">Enter Project Name:</label>
+      <input type="text" id="projectName" name="projectName" required>
+
+      <label for="description">Description:</label>
+      <textarea id="description" name="description" rows="4" required></textarea>
+
+      <label>Project Type:</label>
+      <input type="radio" id="research" name="projectType" value="research" required>
+      <label for="research">Research</label>
+      <input type="radio" id="company" name="projectType" value="company" required>
+      <label for="company">Company</label>
+
+      <button type="submit">Create Project</button>
+    </form>
+
+    <aside id="documentsList">
+      <h2>Documents</h2>
+      <ul>
+        <li>Document 1</li>
+        <li>Document 2</li>
+        <li>Document 3</li>
+      </ul>
+    </aside>
+  </main>
+  <button id="toggleBtn" onclick="toggleDocuments()">Toggle Documents</button>
+</body>
+
+</html>
